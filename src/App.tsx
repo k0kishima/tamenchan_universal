@@ -1,5 +1,5 @@
-import { Home } from "@/features/home";
+import { AppNavigator } from "./AppNavigator";
 
 export default function App() {
-  return <Home />;
+  return <AppNavigator />;
 }
