@@ -1,10 +1,10 @@
-const createExpoWebpackConfigAsync = require('@expo/webpack-config');
-const path = require('path');
+const createExpoWebpackConfigAsync = require("@expo/webpack-config");
+const path = require("path");
 
-module.exports = async function(env, argv) {
+module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv);
 
-  config.entry = './AppEntry.js';
+  config.entry = "./main.js";
 
   if (!config.resolve) {
     config.resolve = {};
@@ -14,7 +14,7 @@ module.exports = async function(env, argv) {
     config.resolve.alias = {};
   }
 
-  config.resolve.alias['@'] = path.resolve(__dirname, 'src/');
+  config.resolve.alias["@"] = path.resolve(__dirname, "src/");
 
   return config;
 };

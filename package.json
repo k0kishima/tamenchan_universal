@@ -24,6 +24,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
+  "main": "main.js",
   "version": "0.1.0",
   "private": true,
   "name": "tamenchan_universal",
