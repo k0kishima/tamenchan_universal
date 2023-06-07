@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-export const Home = ({ navigation }) => {
+export const Game = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-        <Text>Play</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Text>Home</Text>
       </TouchableOpacity>
     </View>
   );
