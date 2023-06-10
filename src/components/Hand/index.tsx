@@ -25,6 +25,7 @@ export const Hand: React.FC<Props> = ({ color, number, containerWidthPercent }: 
   return (
     <View style={styles.container}>
       {(Array.from(String(number)).map((n) => parseInt(n)) as TileNumber[]).map((n, i) => (
+        // rome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         <Tile color={color} number={n} imageStyle={imageStyle} key={i} />
       ))}
     </View>
