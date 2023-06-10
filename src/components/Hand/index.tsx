@@ -7,13 +7,15 @@ import { TILE_SIZE } from "@/constants";
 type Props = {
   color: TileColor;
   number: number;
+  containerWidthPercent: number;
 };
 
-export const Hand: React.FC<Props> = ({ color, number }: Props) => {
+export const Hand: React.FC<Props> = ({ color, number, containerWidthPercent }: Props) => {
   const windowWidth = useWindowDimensions().width;
+  const containerWidthPixel = (windowWidth * containerWidthPercent) / 100;
 
-  const imageWidth = windowWidth * 0.07;
-  const imageHeight = imageWidth * (TILE_SIZE.height / TILE_SIZE.width); // set height as per the ratio
+  const imageWidth = containerWidthPixel / Array.from(String(number)).length;
+  const imageHeight = imageWidth * (TILE_SIZE.height / TILE_SIZE.width);
 
   const imageStyle = {
     width: imageWidth,
@@ -23,7 +25,6 @@ export const Hand: React.FC<Props> = ({ color, number }: Props) => {
   return (
     <View style={styles.container}>
       {(Array.from(String(number)).map((n) => parseInt(n)) as TileNumber[]).map((n, i) => (
-        // rome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         <Tile color={color} number={n} imageStyle={imageStyle} key={i} />
       ))}
     </View>
