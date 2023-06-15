@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Hand } from "@/components/Hand";
 
 type Props = {
@@ -9,9 +9,17 @@ type Props = {
 export const CheatSheet: React.FC<Props> = ({ handAndWinTilesPairs }: Props) => {
   return (
     <View style={styles.container}>
-      {handAndWinTilesPairs.map(([hand, winTiles], i) => (
+      <View style={styles.row}>
+        <View style={[styles.column, { flex: 7 }]}>
+          <Text style={styles.rowTitle}>手牌</Text>
+        </View>
+        <View style={[styles.column, { flex: 3 }]}>
+          <Text style={styles.rowTitle}>待ち</Text>
+        </View>
+      </View>
+      {handAndWinTilesPairs.map(([hand, winTiles], index) => (
         // rome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-        <View key={i} style={styles.row}>
+        <View key={index} style={styles.row}>
           <View style={[styles.column, { flex: 7 }]}>
             <Hand color="m" number={hand} containerWidthPercent={70} />
           </View>
@@ -31,6 +39,10 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     marginBottom: 16,
+  },
+  rowTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
   },
   column: {},
 });
