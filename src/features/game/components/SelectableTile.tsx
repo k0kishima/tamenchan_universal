@@ -3,7 +3,7 @@ import { TouchableOpacity } from "react-native";
 import { Tile, Props as TileProps } from "@/components/Tile";
 
 type Props = TileProps & {
-  onTileSelected: (isSelected: boolean) => void;
+  onTileSelected: (isSelected: boolean, selectedNumber: number) => void;
 };
 
 export const SelectableTile: React.FC<Props> = ({ onTileSelected, ...props }) => {
@@ -12,12 +12,12 @@ export const SelectableTile: React.FC<Props> = ({ onTileSelected, ...props }) =>
   const handleClick = () => {
     const isSelected = !selected;
     setSelected(isSelected);
-    onTileSelected(isSelected);
+    onTileSelected(isSelected, props.number);
   };
 
   return (
     <TouchableOpacity onPress={handleClick}>
-      <Tile {...props} imageStyle={{ ...props.imageStyle, opacity: selected ? 0.5 : 1 }} />
+      <Tile {...props} imageStyle={{ ...props.imageStyle, opacity: selected ? 1 : 0.5 }} />
     </TouchableOpacity>
   );
 };
