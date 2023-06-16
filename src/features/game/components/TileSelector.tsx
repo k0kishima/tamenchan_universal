@@ -1,18 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, useWindowDimensions } from "react-native";
 import { SelectableTile } from "./SelectableTile";
 import { TileNumber } from "@/types";
 import { TILE_SIZE } from "@/constants";
 
-const TILE_RATIO = TILE_SIZE.width / TILE_SIZE.height;
-const TILE_WIDTH_PERCENT = 0.08;
-
 export const TileSelector = ({ onSelectionChange }) => {
   const [selectedTiles, setSelectedTiles] = useState([]);
-  const windowDimensions = useWindowDimensions();
+  const [tileSize, setTileSize] = useState({ width: 80, height: 112 });
 
-  const tileWidth = windowDimensions.width * TILE_WIDTH_PERCENT;
-  const tileHeight = tileWidth / TILE_RATIO;
+  const windowWidth = useWindowDimensions().width;
+  const spacing = windowWidth * 0.02;
+
+  useEffect(() => {
+    const numberOfTiles = 9;
+    const availableWidth = windowWidth - spacing * 2 * numberOfTiles;
+
+    const tileWidth = availableWidth / numberOfTiles;
+    const tileHeight = tileWidth * (TILE_SIZE.height / TILE_SIZE.width);
+
+    setTileSize({ width: tileWidth, height: tileHeight });
+  }, [windowWidth]);
 
   const handleTileSelected = (selected, number) => {
     const newSelectedTiles = selected ? [...selectedTiles, number] : selectedTiles.filter((tile) => tile !== number);
@@ -22,17 +29,15 @@ export const TileSelector = ({ onSelectionChange }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.tileSelector, { paddingHorizontal: spacing }]}>
       {Array.from({ length: 9 }, (_, i) => i + 1).map((number) => (
         <SelectableTile
           key={number}
           number={number as TileNumber}
           color="m"
           onTileSelected={handleTileSelected}
-          imageStyle={{
-            height: tileHeight,
-            width: tileWidth,
-          }}
+          imageStyle={tileSize}
+          style={{ margin: spacing }}
         />
       ))}
     </View>
@@ -40,9 +45,10 @@ export const TileSelector = ({ onSelectionChange }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  tileSelector: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
+    alignItems: "center",
+    flexWrap: "nowrap",
   },
 });
