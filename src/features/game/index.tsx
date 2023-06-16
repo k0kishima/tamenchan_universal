@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, View, Platform, TouchableOpacity, Text, Modal } from "react-native";
+import { StyleSheet, View, Platform, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
 import { Board, CloseButton, CheatSheet, Hand, CorrectAnswerAnimation } from "@/components";
 import { getHandAndWinTilesPairs } from "@/utils";
 import { TileSelector } from "./components/TileSelector";
@@ -64,9 +64,11 @@ export const Game = ({ navigation }) => {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <CheatSheet handAndWinTilesPairs={handAndWinTilesPairs} />
+              <ScrollView style={styles.cheatSheetContainer}>
+                <CheatSheet handAndWinTilesPairs={handAndWinTilesPairs} />
+              </ScrollView>
               <TouchableOpacity
-                style={{ ...styles.openButton, backgroundColor: "maroon" }}
+                style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
                 onPress={() => setModalVisible(!modalVisible)}
               >
                 <Text style={styles.textStyle}>Hide CheatSheet</Text>
@@ -132,16 +134,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    margin: 0,
   },
   modalView: {
     margin: 0,
-    backgroundColor: "white",
+    backgroundColor: "green",
     borderRadius: 0,
     width: "100%",
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  cheatSheetContainer: {
+    margin: 10,
+    padding: 10,
+    width: "100%",
+    height: "100%",
   },
   openButton: {
     backgroundColor: "#F194FF",
