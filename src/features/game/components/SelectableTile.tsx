@@ -1,23 +1,32 @@
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
 import { Tile, Props as TileProps } from "@/components/Tile";
 
 type Props = TileProps & {
-  onTileSelected: (isSelected: boolean) => void;
+  onTileSelected: (isSelected: boolean, selectedNumber: number) => void;
+  style?: ViewStyle;
 };
 
-export const SelectableTile: React.FC<Props> = ({ onTileSelected, ...props }) => {
+export const SelectableTile: React.FC<Props> = ({ onTileSelected, style, ...props }) => {
   const [selected, setSelected] = useState(false);
 
   const handleClick = () => {
     const isSelected = !selected;
     setSelected(isSelected);
-    onTileSelected(isSelected);
+    onTileSelected(isSelected, props.number);
   };
 
   return (
-    <TouchableOpacity onPress={handleClick}>
-      <Tile {...props} imageStyle={{ ...props.imageStyle, opacity: selected ? 0.5 : 1 }} />
+    <TouchableOpacity onPress={handleClick} style={style}>
+      <View style={[selected ? styles.selectedTile : {}, props.imageStyle]}>
+        <Tile {...props} />
+      </View>
     </TouchableOpacity>
   );
+};
+
+const styles = {
+  selectedTile: {
+    opacity: 0.5,
+  },
 };
