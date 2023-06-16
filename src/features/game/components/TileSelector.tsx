@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, useWindowDimensions } from "react-native";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { SelectableTile } from "./SelectableTile";
 import { TileNumber } from "@/types";
 import { TILE_SIZE } from "@/constants";
 
-export const TileSelector = ({ onSelectionChange }) => {
+interface TileSelectorProps {
+  onSelectionChange: (newSelectedTiles: TileNumber[]) => void;
+}
+
+interface TileSelectorHandle {
+  reset: () => void;
+}
+
+export const TileSelector = forwardRef<TileSelectorHandle, TileSelectorProps>((props, ref) => {
+  const { onSelectionChange } = props;
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [tileSize, setTileSize] = useState({ width: 80, height: 112 });
 
@@ -20,6 +29,12 @@ export const TileSelector = ({ onSelectionChange }) => {
 
     setTileSize({ width: tileWidth, height: tileHeight });
   }, [windowWidth]);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setSelectedTiles([]);
+    },
+  }));
 
   const handleTileSelected = (selected, number) => {
     const newSelectedTiles = selected ? [...selectedTiles, number] : selectedTiles.filter((tile) => tile !== number);
@@ -37,12 +52,13 @@ export const TileSelector = ({ onSelectionChange }) => {
           color="m"
           onTileSelected={handleTileSelected}
           imageStyle={tileSize}
+          isSelected={selectedTiles.includes(number)}
           style={{ margin: spacing }}
         />
       ))}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   tileSelector: {

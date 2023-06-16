@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { StyleSheet, View, Platform, TouchableOpacity, Text, Modal } from "react-native";
 import { Board, CloseButton, CheatSheet, Hand, CorrectAnswerAnimation } from "@/components";
 import { getHandAndWinTilesPairs } from "@/utils";
 import { TileSelector } from "./components/TileSelector";
 
 const handAndWinTilesPairs = getHandAndWinTilesPairs();
+
+interface TileSelectorRef {
+  reset: () => void;
+}
 
 export const Game = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -14,6 +18,8 @@ export const Game = ({ navigation }) => {
   const currentPair = handAndWinTilesPairs[currentPairIndex];
   const currentHand = currentPair[0];
   const currentCorrectAnswer = currentPair[1];
+
+  const tileSelectorRef = useRef<TileSelectorRef>(null);
 
   const handleSelectionChange = (newSelectedTiles) => {
     const currentCorrectAnswerArray = String(currentCorrectAnswer).split("").map(Number).sort();
@@ -25,6 +31,9 @@ export const Game = ({ navigation }) => {
     ) {
       setCorrectAnswerAnimationVisible(true);
       setTimeout(() => {
+        if (tileSelectorRef.current) {
+          tileSelectorRef.current.reset();
+        }
         setCorrectAnswerAnimationVisible(false);
         setCurrentPairIndex((prevIndex) => {
           const newIndex = (prevIndex + 1) % handAndWinTilesPairs.length;
@@ -76,7 +85,7 @@ export const Game = ({ navigation }) => {
         </TouchableOpacity>
 
         <View style={styles.tileSelectorWrapper}>
-          <TileSelector onSelectionChange={handleSelectionChange} />
+          <TileSelector ref={tileSelectorRef} onSelectionChange={handleSelectionChange} />
         </View>
 
         <View style={styles.handWrapper}>
