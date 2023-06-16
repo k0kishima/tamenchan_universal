@@ -3,7 +3,7 @@ import { Image, ImageStyle, StyleSheet } from "react-native";
 import { TileColor, TileNumber } from "@/types";
 import { TILE_SIZE } from "@/constants";
 
-type Props = {
+export type Props = {
   color: TileColor;
   number: TileNumber;
   imageStyle?: ImageStyle;
