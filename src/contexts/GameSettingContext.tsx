@@ -1,5 +1,5 @@
-import React, { useState, createContext, Dispatch, SetStateAction, ReactNode } from 'react';
-import { TileColor } from '@/types';
+import React, { useState, useMemo, createContext, Dispatch, SetStateAction, ReactNode } from "react";
+import { TileColor } from "@/types";
 
 type State = {
   tileColor: TileColor;
@@ -8,27 +8,25 @@ type State = {
 type GameSettingContextType = {
   gameSetting: State;
   setGameSetting: Dispatch<SetStateAction<State>>;
-}
+};
 
 type GameSettingProviderProps = {
   children: ReactNode;
-}
+};
 
 export const initialGameSetting: State = {
-  tileColor: 'm',
+  tileColor: "m",
 };
 
 export const GameSettingContext = createContext<GameSettingContextType>({
   gameSetting: initialGameSetting,
-  setGameSetting: () => {}
+  setGameSetting: () => {},
 });
 
 export const GameSettingProvider: React.FC<GameSettingProviderProps> = ({ children }) => {
   const [gameSetting, setGameSetting] = useState(initialGameSetting);
 
-  return (
-    <GameSettingContext.Provider value={{ gameSetting, setGameSetting }}>
-      {children}
-    </GameSettingContext.Provider>
-  );
+  const value = useMemo(() => ({ gameSetting, setGameSetting }), [gameSetting]);
+
+  return <GameSettingContext.Provider value={value}>{children}</GameSettingContext.Provider>;
 };

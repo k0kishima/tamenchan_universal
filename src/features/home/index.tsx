@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Modal, Platform } from "react-native";
+import { GameSettingContext } from "@/contexts/GameSettingContext";
+import { ALL_TILE_COLORS, TileColor } from "@/types";
+import { Tile } from "@/components";
 
 export const Home = ({ navigation }) => {
+  const { gameSetting, setGameSetting } = useContext(GameSettingContext);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleTileColorChange = (color: TileColor) => {
+    setGameSetting({ tileColor: color });
+  };
+
+  const handleSaveSettings = () => {
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("Game")}>
         <Text>Play</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.settingsButton} onPress={() => setModalVisible(true)}>
-        <Text style={styles.gearIcon}>⚙️</Text>
+      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.gearWrapper}>
+        <Text style={styles.gear}>⚙️</Text>
       </TouchableOpacity>
 
       <Modal
@@ -22,12 +33,20 @@ export const Home = ({ navigation }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text>Settings</Text>
+            <View style={styles.tileContainer}>
+              {ALL_TILE_COLORS.map((color) => (
+                <TouchableOpacity key={color} onPress={() => handleTileColorChange(color)}>
+                  <View style={gameSetting.tileColor === color ? styles.selectedTile : styles.notSelectedTile}>
+                    <Tile color={color} number={1} />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
             <TouchableOpacity
               style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={handleSaveSettings}
             >
-              <Text style={styles.textStyle}>Close Settings</Text>
+              <Text style={styles.textStyle}>Save Settings</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -41,29 +60,27 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    position: "relative",
-  },
-  settingsButton: {
-    position: "absolute",
-    right: Platform.OS === "ios" ? 40 : 20,
-    top: Platform.OS === "ios" ? 60 : 20,
-  },
-  gearIcon: {
-    fontSize: 30,
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    margin: 0,
+    marginTop: 22,
   },
   modalView: {
-    margin: 0,
+    margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 20,
+    padding: 35,
     alignItems: "center",
-    width: "80%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   openButton: {
     backgroundColor: "#F194FF",
@@ -75,5 +92,30 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  gearWrapper: {
+    position: "absolute",
+    right: Platform.OS === "ios" ? 40 : 20,
+    top: Platform.OS === "ios" ? 60 : 20,
+  },
+  gear: {
+    fontSize: 30,
+  },
+  selected: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  tileContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+  },
+  selectedTile: {
+    padding: 10,
+    opacity: 1,
+  },
+  notSelectedTile: {
+    padding: 10,
+    opacity: 0.5,
   },
 });
