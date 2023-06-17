@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Modal, Platform } from "react-native";
+import Slider from "@react-native-community/slider";
 import { GameSettingContext } from "@/contexts/GameSettingContext";
 import { ALL_TILE_COLORS, TileColor } from "@/types";
 import { Tile } from "@/components";
@@ -9,7 +10,12 @@ export const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleTileColorChange = (color: TileColor) => {
-    setGameSetting({ tileColor: color });
+    setGameSetting({ ...gameSetting, tileColor: color });
+  };
+
+  const handleSliderValueChange = (value: number) => {
+    const scaledValue = Math.round(value * 5) * 10;
+    setGameSetting({ ...gameSetting, numQuestions: scaledValue });
   };
 
   const handleSaveSettings = () => {
@@ -33,6 +39,9 @@ export const Home = ({ navigation }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <View style={styles.leftAlignedContainer}>
+              <Text>Use type of tiles</Text>
+            </View>
             <View style={styles.tileContainer}>
               {ALL_TILE_COLORS.map((color) => (
                 <TouchableOpacity key={color} onPress={() => handleTileColorChange(color)}>
@@ -41,6 +50,21 @@ export const Home = ({ navigation }) => {
                   </View>
                 </TouchableOpacity>
               ))}
+            </View>
+            <View style={styles.sliderContainer}>
+              <Text>
+                Number of Questions: <Text style={{ fontWeight: "bold" }}>{gameSetting.numQuestions}</Text>
+              </Text>
+              <Slider
+                style={{ width: "100%" }}
+                value={gameSetting.numQuestions / 50}
+                onValueChange={handleSliderValueChange}
+                minimumValue={0.1}
+                minimumTrackTintColor="maroon"
+                maximumTrackTintColor="#000000"
+                thumbTintColor="maroon"
+                step={0.2}
+              />
             </View>
             <TouchableOpacity
               style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
@@ -117,5 +141,17 @@ const styles = StyleSheet.create({
   notSelectedTile: {
     padding: 10,
     opacity: 0.5,
+  },
+  sliderContainer: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    justifyContent: "center",
+    width: "100%",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  leftAlignedContainer: {
+    alignSelf: "flex-start",
+    width: "100%",
   },
 });
