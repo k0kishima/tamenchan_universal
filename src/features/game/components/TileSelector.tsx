@@ -1,11 +1,12 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { SelectableTile } from "./SelectableTile";
-import { TileNumber } from "@/types";
+import { TileNumber, TileColor } from "@/types";
 import { TILE_SIZE } from "@/constants";
 
 interface TileSelectorProps {
   onSelectionChange: (newSelectedTiles: TileNumber[]) => void;
+  color: TileColor;
 }
 
 interface TileSelectorHandle {
@@ -13,7 +14,7 @@ interface TileSelectorHandle {
 }
 
 export const TileSelector = forwardRef<TileSelectorHandle, TileSelectorProps>((props, ref) => {
-  const { onSelectionChange } = props;
+  const { onSelectionChange, color } = props;
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [tileSize, setTileSize] = useState({ width: 80, height: 112 });
 
@@ -49,7 +50,7 @@ export const TileSelector = forwardRef<TileSelectorHandle, TileSelectorProps>((p
         <SelectableTile
           key={number}
           number={number as TileNumber}
-          color="m"
+          color={color}
           onTileSelected={handleTileSelected}
           imageStyle={tileSize}
           isSelected={selectedTiles.includes(number)}
