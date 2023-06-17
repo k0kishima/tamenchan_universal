@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { StyleSheet, View, Platform, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
 import { Board, CloseButton, CheatSheet, Hand, CorrectAnswerAnimation } from "@/components";
 import { getHandAndWinTilesPairs } from "@/utils";
 import { TileSelector } from "./components/TileSelector";
+import { GameSettingContext } from "@/contexts/GameSettingContext";
 
 const handAndWinTilesPairs = getHandAndWinTilesPairs();
 
@@ -11,6 +12,7 @@ interface TileSelectorRef {
 }
 
 export const Game = ({ navigation }) => {
+  const { gameSetting } = useContext(GameSettingContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentPairIndex, setCurrentPairIndex] = useState(0);
   const [correctAnswerAnimationVisible, setCorrectAnswerAnimationVisible] = useState(false);
@@ -65,7 +67,7 @@ export const Game = ({ navigation }) => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <ScrollView style={styles.cheatSheetContainer}>
-                <CheatSheet handAndWinTilesPairs={handAndWinTilesPairs} />
+                <CheatSheet color={gameSetting.tileColor} handAndWinTilesPairs={handAndWinTilesPairs} />
               </ScrollView>
               <TouchableOpacity
                 style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
@@ -87,11 +89,11 @@ export const Game = ({ navigation }) => {
         </TouchableOpacity>
 
         <View style={styles.tileSelectorWrapper}>
-          <TileSelector ref={tileSelectorRef} onSelectionChange={handleSelectionChange} />
+          <TileSelector color={gameSetting.tileColor} ref={tileSelectorRef} onSelectionChange={handleSelectionChange} />
         </View>
 
         <View style={styles.handWrapper}>
-          <Hand color="m" number={currentHand} containerWidthPercent={100} />
+          <Hand color={gameSetting.tileColor} number={currentHand} containerWidthPercent={100} />
         </View>
       </Board>
       {correctAnswerAnimationVisible && (
