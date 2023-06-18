@@ -1,7 +1,7 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { StyleSheet, View, Platform, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
 import { Board, CloseButton, CheatSheet, Hand, CorrectAnswerAnimation } from "@/components";
-import { getHandAndWinTilesPairs } from "@/utils";
+import { getHandAndWinTilesPairs, shuffleArray } from "@/utils";
 import { TileSelector } from "./components/TileSelector";
 import { GameSettingContext } from "@/contexts/GameSettingContext";
 
@@ -16,14 +16,22 @@ export const Game = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentPairIndex, setCurrentPairIndex] = useState(0);
   const [correctAnswerAnimationVisible, setCorrectAnswerAnimationVisible] = useState(false);
+  const [selectedPairs, setSelectedPairs] = useState([]);
 
-  const currentPair = handAndWinTilesPairs[currentPairIndex];
+  const currentPair = selectedPairs[currentPairIndex] || [null, null];
   const currentHand = currentPair[0];
   const currentCorrectAnswer = currentPair[1];
 
   const tileSelectorRef = useRef<TileSelectorRef>(null);
 
+  useEffect(() => {
+    const shuffledPairs = shuffleArray(handAndWinTilesPairs);
+    setSelectedPairs(shuffledPairs.slice(0, gameSetting.numQuestions));
+  }, []);
+
   const handleSelectionChange = (newSelectedTiles) => {
+    if (!currentCorrectAnswer) return;
+
     const currentCorrectAnswerArray = String(currentCorrectAnswer).split("").map(Number).sort();
     const sortedNewSelectedTiles = [...newSelectedTiles].sort();
 
@@ -38,7 +46,7 @@ export const Game = ({ navigation }) => {
         }
         setCorrectAnswerAnimationVisible(false);
         setCurrentPairIndex((prevIndex) => {
-          const newIndex = (prevIndex + 1) % handAndWinTilesPairs.length;
+          const newIndex = (prevIndex + 1) % gameSetting.numQuestions;
           if (newIndex === 0) {
             // 全ての問題が終了した場合
             navigation.navigate("Result");
@@ -93,7 +101,7 @@ export const Game = ({ navigation }) => {
         </View>
 
         <View style={styles.handWrapper}>
-          <Hand color={gameSetting.tileColor} number={currentHand} containerWidthPercent={100} />
+          {currentHand && <Hand color={gameSetting.tileColor} number={currentHand} containerWidthPercent={100} />}
         </View>
       </Board>
       {correctAnswerAnimationVisible && (
