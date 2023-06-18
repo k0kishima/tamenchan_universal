@@ -3,6 +3,7 @@ import { TileColor } from "@/types";
 
 type State = {
   tileColor: TileColor;
+  numQuestions: number;
 };
 
 type GameSettingContextType = {
@@ -16,6 +17,7 @@ type GameSettingProviderProps = {
 
 export const initialGameSetting: State = {
   tileColor: "m",
+  numQuestions: 10,
 };
 
 export const GameSettingContext = createContext<GameSettingContextType>({
