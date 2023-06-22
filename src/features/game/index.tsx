@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { StyleSheet, View, Platform, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
-import { Board, CloseButton, CheatSheet, Hand, CorrectAnswerAnimation } from "@/components";
+import { Board, CloseButton, CheatSheet, Hand, CorrectAnswerAnimation, ProgressBar } from "@/components";
 import { getHandAndWinTilesPairs, shuffleArray } from "@/utils";
 import { TileSelector } from "./components/TileSelector";
 import { GameSettingContext } from "@/contexts/GameSettingContext";
@@ -21,6 +21,8 @@ export const Game = ({ navigation }) => {
   const currentPair = selectedPairs[currentPairIndex] || [null, null];
   const currentHand = currentPair[0];
   const currentCorrectAnswer = currentPair[1];
+
+  const progress = (currentPairIndex / gameSetting.numQuestions) * 100;
 
   const tileSelectorRef = useRef<TileSelectorRef>(null);
 
@@ -59,6 +61,7 @@ export const Game = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <ProgressBar progress={progress} color="#ff0000" />
       <Board>
         <View style={styles.rightTopCorner}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
