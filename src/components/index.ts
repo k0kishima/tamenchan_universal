@@ -5,3 +5,4 @@ export { CloseButton } from "./Button/CloseButton";
 export { CheatSheet } from "./CheatSheet";
 export { Hand } from "./Hand";
 export { Tile } from "./Tile";
+export { ProgressBar } from "./ProgressBar";
