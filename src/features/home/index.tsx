@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Modal, Platform } from "react-native";
+import Modal from "react-native-modal";
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
 import Slider from "@react-native-community/slider";
 import { GameSettingContext } from "@/contexts/GameSettingContext";
 import { ALL_TILE_COLORS, TileColor } from "@/types";
@@ -32,47 +33,45 @@ export const Home = ({ navigation }) => {
       </TouchableOpacity>
 
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        isVisible={modalVisible}
+        onBackButtonPress={() => setModalVisible(false)}
+        onBackdropPress={() => setModalVisible(false)}
+        style={styles.modal}
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={styles.leftAlignedContainer}>
-              <Text>Use type of tiles</Text>
-            </View>
-            <View style={styles.tileContainer}>
-              {ALL_TILE_COLORS.map((color) => (
-                <TouchableOpacity key={color} onPress={() => handleTileColorChange(color)}>
-                  <View style={gameSetting.tileColor === color ? styles.selectedTile : styles.notSelectedTile}>
-                    <Tile color={color} number={1} />
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <View style={styles.sliderContainer}>
-              <Text>
-                Number of Questions: <Text style={{ fontWeight: "bold" }}>{gameSetting.numQuestions}</Text>
-              </Text>
-              <Slider
-                style={{ width: "100%" }}
-                value={gameSetting.numQuestions / 50}
-                onValueChange={handleSliderValueChange}
-                minimumValue={0.1}
-                minimumTrackTintColor="maroon"
-                maximumTrackTintColor="#000000"
-                thumbTintColor="maroon"
-                step={0.2}
-              />
-            </View>
-            <TouchableOpacity
-              style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
-              onPress={handleSaveSettings}
-            >
-              <Text style={styles.textStyle}>Save Settings</Text>
-            </TouchableOpacity>
+        <View style={styles.modalView}>
+          <View style={styles.leftAlignedContainer}>
+            <Text>Use type of tiles</Text>
           </View>
+          <View style={styles.tileContainer}>
+            {ALL_TILE_COLORS.map((color) => (
+              <TouchableOpacity key={color} onPress={() => handleTileColorChange(color)}>
+                <View style={gameSetting.tileColor === color ? styles.selectedTile : styles.notSelectedTile}>
+                  <Tile color={color} number={1} />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <View style={styles.sliderContainer}>
+            <Text>
+              Number of Questions: <Text style={{ fontWeight: "bold" }}>{gameSetting.numQuestions}</Text>
+            </Text>
+            <Slider
+              style={{ width: "100%" }}
+              value={gameSetting.numQuestions / 50}
+              onValueChange={handleSliderValueChange}
+              minimumValue={0.1}
+              minimumTrackTintColor="maroon"
+              maximumTrackTintColor="#000000"
+              thumbTintColor="maroon"
+              step={0.2}
+            />
+          </View>
+          <TouchableOpacity
+            style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
+            onPress={handleSaveSettings}
+          >
+            <Text style={styles.textStyle}>Save Settings</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>
@@ -90,6 +89,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
+  },
+  modal: {
+    flex: 1,
+    margin: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
     margin: 20,
