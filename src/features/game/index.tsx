@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import { StyleSheet, View, Platform, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
+import Modal from "react-native-modal";
+import { StyleSheet, View, Platform, TouchableOpacity, Text, ScrollView } from "react-native";
 import { Board, CloseButton, CheatSheet, Hand, CorrectAnswerAnimation, ProgressBar } from "@/components";
 import { getHandAndWinTilesPairs, shuffleArray } from "@/utils";
 import { TileSelector } from "./components/TileSelector";
@@ -70,23 +71,21 @@ export const Game = ({ navigation }) => {
         </View>
 
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
+          isVisible={modalVisible}
+          onBackButtonPress={() => setModalVisible(false)}
+          onBackdropPress={() => setModalVisible(false)}
+          style={styles.modal}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <ScrollView style={styles.cheatSheetContainer}>
-                <CheatSheet color={gameSetting.tileColor} handAndWinTilesPairs={handAndWinTilesPairs} />
-              </ScrollView>
-              <TouchableOpacity
-                style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Hide CheatSheet</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.modalView}>
+            <ScrollView style={styles.cheatSheetContainer}>
+              <CheatSheet color={gameSetting.tileColor} handAndWinTilesPairs={handAndWinTilesPairs} />
+            </ScrollView>
+            <TouchableOpacity
+              style={{ ...styles.openButton, backgroundColor: "maroon", margin: 10 }}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Hide CheatSheet</Text>
+            </TouchableOpacity>
           </View>
         </Modal>
 
@@ -148,6 +147,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     margin: 0,
+  },
+  modal: {
+    flex: 1,
+    margin: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
     margin: 0,
